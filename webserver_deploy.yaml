@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+name: nginx
+...
+spec:
+  template:
+    spec:
+      containers:
+      - name: nginx
+        ...
+      - name: goaccess
+        ...
+      - name: goaccess-web
+        command:
+        - python
+        - -m
+        - http.server
+        image: python
+        imagePullPolicy: Always
+        name: goaccess-web
+        ports:
+        - containerPort: 8000
+          name: goaccess
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 200m
+            memory: 32Mi
+        volumeMounts:
+        - mountPath: /var/log
+          name: nginx-ingress-pvc
+        workingDir: /var/log/nginx

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+name: nginx
+...
+spec:
+  template:
+    spec:
+      containers:
+      - name: goaccess
+        command:
+        - goaccess
+        - /var/log/nginx/access.log
+        - -o
+        - /var/log/nginx/index.html
+        - --log-format=COMBINED
+        - --real-time-html
+        image: allinurl/goaccess
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 200m
+            memory: 32Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/log
+          name: nginx-ingress-pvc
